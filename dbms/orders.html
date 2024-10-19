@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .no-orders-message {
+            font-size: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+        .order-item {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Orders</h1>
+        <div id="ordersContainer">
+            <!-- Orders will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        // Retrieve the username from local storage
+        const customerName = localStorage.getItem('username') || "Customer"; // Default to "Customer" if no name found
+        const orders = []; // Replace with actual order data, if available
+
+        const ordersContainer = document.getElementById('ordersContainer');
+
+        if (orders.length === 0) {
+            ordersContainer.innerHTML = `<div class="no-orders-message">Hello ${customerName}, you don't have any orders.</div>`;
+        } else {
+            ordersContainer.innerHTML = orders.map(order => `
+                <div class="order-item">
+                    <h4>Order ID: ${order.id}</h4>
+                    <p>Order Date: ${order.date}</p>
+                    <p>Items:</p>
+                    <ul>
+                        ${order.items.map(item => `<li>${item.name} - ${item.quantity}</li>`).join('')}
+                    </ul>
+                    <p>Total: $${order.total}</p>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Addresses</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Your styles for this page */
+        .header-container {
+            margin-bottom: 20px;
+        }
+        .address-list .list-group-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1 class="text-center">Saved Addresses</h1>
+    </div>
+    
+    <div class="container">
+        <h3>Your Addresses</h3>
+        <div class="address-list" id="addressList">
+            <ul class="list-group"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Load addresses from local storage and display them
+        function loadAddresses() {
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            const addressListElement = document.getElementById('addressList').querySelector('.list-group');
+            addressListElement.innerHTML = '';
+
+            addresses.forEach((address, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.innerText = `${address.place}, ${address.district}, ${address.state}`;
+                listItem.onclick = () => {
+                    localStorage.setItem('selectedAddress', JSON.stringify(address));
+                    window.location.href = 'index.html'; // Redirect to index.html
+                };
+                addressListElement.appendChild(listItem);
+            });
+        }
+
+        // Call the function to load addresses when the page loads
+        loadAddresses();
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 id="pageTitle">Your Cart</h1>
+        <div id="greeting" class="mt-4" style="display: none;">
+            <h2>Hello, <span id="username">User</span>!</h2>
+            <p>Your cart is empty. Add some items to your cart.</p>
+        </div>
+        <ul id="cartItems" class="list-group mt-4">
+            <!-- Cart items will be dynamically loaded here -->
+        </ul>
+        <div class="mt-4">
+            <button id="backToHome" class="btn btn-primary">Back to Home</button>
+        </div>
+    </div>
+
+    <script>
+        // Get cart data from localStorage
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        const username = 'John Doe'; // Replace with actual logic to get the username if available
+
+        // Display greeting if cart is empty
+        const greeting = document.getElementById('greeting');
+        const cartItemsList = document.getElementById('cartItems');
+
+        if (cartItems.length === 0) {
+            greeting.style.display = 'block';
+            document.getElementById('username').textContent = username;
+            cartItemsList.style.display = 'none';
+        } else {
+            cartItems.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+                listItem.className = 'list-group-item';
+                cartItemsList.appendChild(listItem);
+            });
+        }
+
+        // Back to home button
+        document.getElementById('backToHome').addEventListener('click', function() {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

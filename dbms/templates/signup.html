@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendEra Emporium - Sign Up</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .img-container {
+      margin-bottom: 20px;
+    }
+    #timer {
+      margin-top: 10px;
+      color: red;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <div class="img-container">
+          <img src="https://static.vecteezy.com/system/resources/previews/000/649/115/original/user-icon-symbol-sign-vector.jpg" alt="Login Image" style="max-width: 200px;">
+        </div>
+        <h2>Sign Up</h2>
+
+        <form id="signupForm" method="post" action="/signup">
+
+          <!-- Step 1: Username, First Name, Last Name -->
+          <div id="step1">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="firstname" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="lastname" required>
+            </div>
+            <div>
+              <label for="address">Address</label>
+              <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="showStep2()">Next</button>
+          </div>
+
+          <!-- Step 2: Phone Number and OTP Verification -->
+          <div id="step2" style="display: none;">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" class="form-control" id="phone" name="mob_num" required>
+              <button type="button" class="btn btn-primary btn-block" onclick="sendOtp()">Send OTP</button>
+            </div>
+            <div class="form-group">
+              <label for="otp">Enter OTP</label>
+              <input type="text" class="form-control" id="otp" disabled required>
+            </div>
+            <div id="timer">Time left: 02:00</div>
+            <button type="button" class="btn btn-primary btn-block" onclick="verifyOtp()">Verify OTP</button>
+            <button type="button" id="resendOtp" class="btn btn-link" style="display: none;" onclick="sendOtp()">Resend OTP</button>
+          </div>
+
+          <!-- Step 3: Profile Picture (Optional) -->
+          <div id="step3" style="display: none;">
+            <div class="form-group">
+              <label for="profilePicture">Upload Profile Picture (Optional)</label>
+              <input type="file" class="form-control" id="profilePicture" accept="image/*">
+            </div>
+            <button type="button" class="btn btn-secondary btn-block" onclick="skipStep3()">Skip</button>
+            <button type="button" class="btn btn-primary btn-block" onclick="showStep4()">Next</button>
+          </div>
+
+          <!-- Step 4: Date of Birth (Optional) -->
+          <div id="step4" style="display: none;">
+            <div class="form-group">
+              <label for="dob">Date of Birth (Optional)</label>
+              <input type="date" class="form-control" id="dob" name="dateofbirth">
+            </div>
+            <button type="button" class="btn btn-secondary btn-block" onclick="skipStep4()">Skip</button>
+            <button type="button" class="btn btn-primary btn-block" onclick="showStep5()">Next</button>
+          </div>
+
+          <!-- Step 5: Email and Password -->
+          <div id="step5" style="display: none;">
+            <div class="form-group">
+              <label for="email" >Email</label>
+              <input type="email" class="form-control" id="email" name="mail" required>
+            </div>
+            <div class="form-group">
+              <label for="password" name="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" >Sign Up</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let generatedOtp;
+    let users = {}; // Simulated user data storage
+
+    function sendOtp() {
+      generatedOtp = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById('otp').disabled = false;
+      document.getElementById('otp').focus();
+      alert(`OTP sent: ${generatedOtp}`);
+      startTimer();
+    }
+
+    function startTimer() {
+      let timer = 120;
+      const timerDisplay = document.getElementById('timer');
+      const interval = setInterval(() => {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        timerDisplay.textContent = `Time left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        timer--;
+        if (timer < 0) {
+          clearInterval(interval);
+          alert('OTP expired. Please request a new one.');
+          document.getElementById('otp').disabled = true;
+        }
+      }, 1000);
+    }
+
+    function verifyOtp() {
+      const otpInput = document.getElementById('otp').value;
+      if (otpInput === generatedOtp.toString()) {
+        alert('OTP verified successfully!');
+        // Proceed to profile picture and date of birth steps after OTP verification
+        showStep3();
+      } else {
+        alert('Invalid OTP. Please try again.');
+      }
+    }
+
+    function showStep2() {
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+    }
+
+    function showStep3() {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step3').style.display = 'block';
+    }
+
+    function skipStep3() {
+      document.getElementById('step3').style.display = 'none';
+      document.getElementById('step4').style.display = 'block';
+    }
+
+    function showStep4() {
+      document.getElementById('step3').style.display = 'none';
+      document.getElementById('step4').style.display = 'block';
+    }
+
+    function skipStep4() {
+      document.getElementById('step4').style.display = 'none';
+      document.getElementById('step5').style.display = 'block';
+    }
+
+    function showStep5() {
+      document.getElementById('step4').style.display = 'none';
+      document.getElementById('step5').style.display = 'block';
+    }
+
+    function handleSignUp() {
+      const username = document.getElementById('username').value;
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const profilePicture = document.getElementById('profilePicture').files[0];
+      const dob = document.getElementById('dob').value;
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+
+      users[username] = {
+        firstName,
+        lastName,
+        phone,
+        email,
+        password,
+        dob,
+        profilePicture,
+      };
+
+      alert('Sign up successful! Redirecting to home page.');
+      // Redirect to index.html after successful sign up
+      window.location.href = "{{url_for('index')}}";
+    }
+  </script>
+</body>
+</html>

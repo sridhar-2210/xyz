@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Addresses</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Your styles for this page */
+        .header-container {
+            margin-bottom: 20px;
+        }
+        .address-form {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .address-buttons {
+            text-align: center;
+        }
+        .address-buttons button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="container">
+            <button class="btn btn-secondary" onclick="window.location.href='index.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <h2>Select or Add Address</h2>
+        <div class="address-list">
+            <!-- Address list will be populated here -->
+        </div>
+        <div class="address-buttons mt-4">
+            <button class="btn btn-primary" onclick="showAddressForm()">Add New Address</button>
+        </div>
+        <div id="addressFormContainer" class="mt-4" style="display: none;">
+            <h3>Add New Address</h3>
+            <form id="addressForm">
+                <div class="form-group">
+                    <label for="state">State:</label>
+                    <input type="text" class="form-control" id="state" required>
+                </div>
+                <div class="form-group">
+                    <label for="district">District:</label>
+                    <input type="text" class="form-control" id="district" required>
+                </div>
+                <div class="form-group">
+                    <label for="place">Place:</label>
+                    <input type="text" class="form-control" id="place" required>
+                </div>
+                <div class="form-group">
+                    <label for="area">Area:</label>
+                    <input type="text" class="form-control" id="area" required>
+                </div>
+                <div class="form-group">
+                    <label for="houseNumber">House Number:</label>
+                    <input type="text" class="form-control" id="houseNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="tel" class="form-control" id="phoneNumber" required>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="saveAddress()">Save Address</button>
+                <button type="button" class="btn btn-secondary" onclick="hideAddressForm()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showAddressForm() {
+            document.getElementById('addressFormContainer').style.display = 'block';
+        }
+
+        function hideAddressForm() {
+            document.getElementById('addressFormContainer').style.display = 'none';
+        }
+
+        function saveAddress() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const place = document.getElementById('place').value;
+            const area = document.getElementById('area').value;
+            const houseNumber = document.getElementById('houseNumber').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            const address = {
+                state,
+                district,
+                place,
+                area,
+                houseNumber,
+                phoneNumber
+            };
+
+            let addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            addresses.push(address);
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+
+            hideAddressForm();
+            loadAddresses();
+        }
+
+        function loadAddresses() {
+            const addressList = document.querySelector('.address-list');
+            addressList.innerHTML = '';
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            addresses.forEach((address, index) => {
+                const addressItem = document.createElement('div');
+                addressItem.className = 'list-group-item list-group-item-action';
+                addressItem.innerText = `${address.place}, ${address.district}, ${address.state}`;
+                
+                // Add click event to save and redirect
+                addressItem.addEventListener('click', () => {
+                    localStorage.setItem('selectedAddress', JSON.stringify(address));
+                    window.location.href = 'index.html';
+                });
+
+                // Create an Edit button for each address
+                const editButton = document.createElement('button');
+                editButton.className = 'btn btn-warning btn-sm float-right';
+                editButton.innerText = 'Edit';
+                editButton.onclick = (event) => {
+                    event.stopPropagation(); // Prevent triggering the address selection
+                    editAddress(index);
+                };
+
+                addressItem.appendChild(editButton);
+                addressList.appendChild(addressItem);
+            });
+        }
+
+        function editAddress(index) {
+            const addresses = JSON.parse(localStorage.getItem('addresses'));
+            const address = addresses[index];
+            
+            document.getElementById('state').value = address.state;
+            document.getElementById('district').value = address.district;
+            document.getElementById('place').value = address.place;
+            document.getElementById('area').value = address.area;
+            document.getElementById('houseNumber').value = address.houseNumber;
+            document.getElementById('phoneNumber').value = address.phoneNumber;
+
+            hideAddressForm(); // Hide the form to allow editing
+            document.getElementById('addressFormContainer').style.display = 'block'; // Show form for editing
+            const saveButton = document.querySelector('.btn-primary');
+            saveButton.onclick = () => updateAddress(index);
+        }
+
+        function updateAddress(index) {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const place = document.getElementById('place').value;
+            const area = document.getElementById('area').value;
+            const houseNumber = document.getElementById('houseNumber').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            const address = {
+                state,
+                district,
+                place,
+                area,
+                houseNumber,
+                phoneNumber
+            };
+
+            let addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            addresses[index] = address; // Update existing address
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+
+            hideAddressForm();
+            loadAddresses();
+        }
+
+        loadAddresses();
+    </script>
+</body>
+</html>

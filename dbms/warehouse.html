@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Signup</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
+        }
+        #otpModal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        #otpModalContent {
+            background-color: white;
+            padding: 20px;
+            margin: 10% auto;
+            width: 300px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Login or Signup</h1>
+
+        <!-- Login Section -->
+        <div id="login-section">
+            <h3>Login</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <hr>
+            <button type="button" class="btn btn-link" id="goToSignup">Don't have an account? Signup</button>
+        </div>
+
+        <!-- Signup Section -->
+        <div id="signup-section" style="display:none;">
+            <h3>Signup</h3>
+            <form id="signupForm">
+                <!-- Step 1: Basic Information -->
+                <div class="step active" id="step1">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Enter your first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Enter your last name" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="next1">Next</button>
+                </div>
+
+                <!-- Step 2: Mobile Number and Send OTP -->
+                <div class="step" id="step2">
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number</label>
+                        <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter your mobile number" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="sendOtp">Send OTP</button>
+                </div>
+
+                <!-- Step 3: Enter OTP -->
+                <div class="step" id="step3" style="display:none;">
+                    <div class="form-group">
+                        <label for="otp">OTP</label>
+                        <input type="text" class="form-control" id="otp" placeholder="Enter OTP" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="verifyOtp">Verify OTP</button>
+                    <button type="button" class="btn btn-secondary" id="next2" style="display:none;">Next</button>
+                </div>
+
+                <!-- Step 4: Profile Picture and DOB (Optional) -->
+                <div class="step" id="step4" style="display:none;">
+                    <div class="form-group">
+                        <label for="profilePicture">Profile Picture (Optional)</label>
+                        <input type="file" class="form-control-file" id="profilePicture">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth (Optional)</label>
+                        <input type="date" class="form-control" id="dob">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="skipStep4">Skip</button>
+                    <button type="button" class="btn btn-primary" id="next4">Next</button>
+                </div>
+
+                <!-- Step 5: Email, Password, and Confirm Password -->
+                <div class="step" id="step5" style="display:none;">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="button" class="btn btn-success" id="submitSignup">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- OTP Modal -->
+    <div id="otpModal">
+        <div id="otpModalContent">
+            <h4>Your OTP is:</h4>
+            <p id="generatedOtp"></p>
+            <button class="btn btn-primary" id="closeOtpModal">Close</button>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Switch between login and signup
+        document.getElementById('goToSignup').addEventListener('click', function() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('signup-section').style.display = 'block';
+        });
+
+        // Step navigation logic
+        document.getElementById('next1').addEventListener('click', function() {
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+        });
+
+        // OTP Modal display logic
+        function showOtpModal(otp) {
+            document.getElementById('generatedOtp').textContent = otp;
+            document.getElementById('otpModal').style.display = 'block';
+        }
+
+        // Close OTP Modal
+        document.getElementById('closeOtpModal').addEventListener('click', function() {
+            document.getElementById('otpModal').style.display = 'none';
+        });
+
+        // OTP sending logic (mock sending)
+        document.getElementById('sendOtp').addEventListener('click', function() {
+            const mobileNumber = document.getElementById('mobileNumber').value;
+            if (mobileNumber.length >= 10) {
+                const otp = Math.floor(100000 + Math.random() * 900000);  // Generate 6-digit OTP
+                showOtpModal(otp);
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
+                // Store the OTP for verification
+                document.getElementById('verifyOtp').dataset.otp = otp;
+            } else {
+                alert('Please enter a valid mobile number.');
+            }
+        });
+
+        // OTP verification logic
+        document.getElementById('verifyOtp').addEventListener('click', function() {
+            const enteredOtp = document.getElementById('otp').value;
+            const generatedOtp = this.dataset.otp;  // Retrieve generated OTP
+
+            if (enteredOtp === generatedOtp) {
+                alert('OTP verified successfully!');
+                document.getElementById('step3').style.display = 'none';
+                document.getElementById('step4').style.display = 'block';
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        });
+
+        // Proceed to the next step
+        document.getElementById('next4').addEventListener('click', function() {
+            document.getElementById('step4').style.display = 'none';
+            document.getElementById('step5').style.display = 'block';
+        });
+
+        // Final submission logic
+        document.getElementById('submitSignup').addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password === confirmPassword) {
+                alert('Account created successfully!');
+                // Here you would typically submit the form to the server
+            } else {
+                alert('Passwords do not match.');
+            }
+        });
+    </script>
+</body>
+</html>

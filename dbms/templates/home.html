@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendEra Emporium</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Existing styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .search-bar {
+            flex: 1;
+            font-size: 1.2rem; /* Increased font size */
+            padding: 12px; /* Increased padding for bigger input field */
+        }
+        .location-key {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .location-key img {
+            width: 30px; /* Increased icon size */
+            height: 30px;
+        }
+        .user-name {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #007bff;
+            font-size: 1rem; /* Decreased font size */
+            margin-right: 15px; /* Added gap between the username and dropdown icon */
+        }
+        .delivery-address {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #007bff;
+            cursor: pointer;
+        }
+        .ads-container {
+            position: relative;
+            margin-top: 20px;
+        }
+        .marquee {
+            font-size: 2rem; /* Increased font size */
+            font-weight: bold;
+            color: #007bff;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-content {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            animation: scroll-left 10s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .product-list-item {
+            margin: 5px 0;
+            font-size: 1.2rem; /* Increased font size */
+        }
+        .address-form-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .address-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .address-form input {
+            margin-bottom: 10px;
+            font-size: 1.1rem; /* Increased font size */
+        }
+        .address-buttons {
+            text-align: center;
+        }
+        .address-list {
+            margin-top: 20px;
+        }
+        .address-list .list-group-item {
+            cursor: pointer;
+            font-size: 1.2rem; /* Increased font size */
+        }
+        .address-dropdown {
+            display: none;
+            margin-top: 10px;
+        }
+        .more-options {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        .more-options ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+        .more-options ul li {
+            padding: 8px;
+            cursor: pointer;
+            font-size: 1.2rem; /* Increased font size */
+        }
+        .more-options ul li:hover {
+            background: #f1f1f1;
+        }
+
+        /* New styles for user profile dropdown */
+        .profile-dropdown {
+            position: relative;
+        }
+        .profile-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            width: 200px; /* Increased width */
+        }
+
+        .profile-dropdown-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .profile-dropdown-menu ul li {
+            padding: 15px; /* Increased padding */
+            cursor: pointer;
+            font-size: 1.2rem; /* Increased font size */
+        }
+
+        .profile-dropdown-menu ul li:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-left">
+            <!-- Delivery Address on the left side -->
+            <div class="delivery-address" id="deliveryAddress">Deliver to {{user.username}}</div> <!-- Displaying the delivery address -->
+        </div>
+        <div class="search-container">
+            <input type="text" class="form-control search-bar" placeholder="Search for products">
+            <div class="location-key" id="locationKey">
+                <img src="https://www.kindpng.com/picc/m/438-4387385_location-ping-icon-png-transparent-png.png" alt="Location Key">
+            </div>
+        </div>
+        <div class="user-name" id="userName">{{user.username}}</div> <!-- Decreased font size for the username -->
+        <div class="profile-dropdown">
+            <!-- Profile Icon -->
+            <i class="fas fa-user" style="font-size: 24px; cursor: pointer;" id="profileIcon"></i>
+            <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                <ul>
+                    <li id="pro">My Profile</li>
+                    <li onclick="window.location.href='edit-profile.html'">Edit Profile</li>
+                    <li id="Cart">Cart</li>
+                    <li onclick="window.location.href='#logout'">Logout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ads-container">
+        <div class="marquee">
+            <div class="marquee-content">
+                <img src="ad1.png" alt="Ad 1" style="max-width: 100px; margin-right: 20px;">
+                <img src="ad2.png" alt="Ad 2" style="max-width: 100px; margin-right: 20px;">
+                <img src="ad3.png" alt="Ad 3" style="max-width: 100px; margin-right: 20px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Rest of the page content -->
+
+    <script>
+        // Toggle profile dropdown menu
+        document.getElementById('profileIcon').addEventListener('click', function() {
+            const dropdownMenu = document.getElementById('profileDropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        });
+        document.getElementById('pro').addEventListener('click',function(){
+            window.location.href='{{url_for("profile")}}'
+        });
+        document.getElementById('Cart').addEventListener('click',function(){
+            window.location.href='{{url_for("cart1")}}'
+        });
+    </script>
+</body>
+</html>

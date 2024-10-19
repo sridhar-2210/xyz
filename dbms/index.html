@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendEra Emporium</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Existing styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .search-bar {
+            flex: 1;
+        }
+        .delivery-address {
+            margin-left: 10px;
+        }
+        .categories-dropdown {
+            margin-left: 10px;
+        }
+        .more-options {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            padding: 10px;
+            z-index: 1000;
+        }
+        .more-options a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        .more-options a:hover {
+            background-color: #f1f1f1;
+        }
+        .more-options-button {
+            cursor: pointer;
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        .ads-container {
+            position: relative;
+            margin-top: 20px;
+        }
+        .marquee {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-content {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            animation: scroll-left 10s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .product-list-item {
+            margin: 5px 0;
+        }
+        .address-form-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .address-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .address-form input {
+            margin-bottom: 10px;
+        }
+        .address-buttons {
+            text-align: center;
+        }
+        .location-key {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .location-key img {
+            width: 24px;
+            height: 24px;
+        }
+        .delivery-location {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .address-list {
+            margin-top: 20px;
+        }
+        .address-list .list-group-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header-left">
+            <button id="addressButton" class="btn btn-link">Select Delivery Address</button>
+        </div>
+        <div class="search-container">
+            <input type="text" class="form-control search-bar" placeholder="Search for products">
+            <select class="form-control categories-dropdown">
+                <option>All Categories</option>
+                <option>Fresh: Fresh groceries</option>
+                <option>Amazon miniTV: Streaming service</option>
+                <option>Sell: Sell on Amazon</option>
+                <option>Best Sellers: Popular products</option>
+                <option>Mobiles: Mobile phones</option>
+                <option>Today's Deals: Daily discounts</option>
+                <option>Customer Service: Help and support</option>
+                <option>Prime: Membership program</option>
+                <option>Electronics: Electronic devices</option>
+                <option>Fashion: Clothing and accessories</option>
+                <option>New Releases: Latest products</option>
+                <option>Home & Kitchen: Home and kitchen items</option>
+                <option>Amazon Pay: Payment service</option>
+                <option>Motorbike Books: Books about motorcycles</option>
+            </select>
+            <!-- Location Key Image -->
+            <div class="location-key" id="locationKey">
+                <img src="location.png" alt="Location Key">
+            </div>
+            <!-- Delivery Location Display -->
+            <div id="deliveryLocation" class="delivery-location">Select a delivery address</div>
+        </div>
+        <div class="header-right">
+            <a href="login.html" class="btn btn-link">Hello, sign in</a>
+            <a href="cart.html" class="btn btn-link" id="cartButton">Orders Cart</a>
+            <span class="more-options-button" id="moreOptionsButton">&#9776;</span>
+        </div>
+        <div class="more-options" id="moreOptionsMenu">
+            <a href="orders.html">Orders</a>
+            <a href="customerservice.html">Customer Service</a>
+            <a href="accountmanagement.html">Account Management</a>
+        </div>
+    </div>
+
+    <div class="ads-container">
+        <div class="marquee">
+            <div class="marquee-content">
+                <img src="ad1.png" alt="Ad 1" style="max-width: 100px; margin-right: 20px;">
+                <img src="ad2.png" alt="Ad 2" style="max-width: 100px; margin-right: 20px;">
+                <img src="ad3.png" alt="Ad 3" style="max-width: 100px; margin-right: 20px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-9">
+                <h2>Search Results</h2>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchBar" placeholder="Search for products...">
+                </div>
+                <div id="productList">
+                    <!-- Product listings will go here -->
+                </div>
+                <h3>Add Delivery Address</h3>
+                <div class="address-form-container" id="addressFormContainer">
+                    <div class="address-form">
+                        <input type="text" id="placeInput" class="form-control" placeholder="Place" required>
+                        <input type="text" id="districtInput" class="form-control" placeholder="District" required>
+                        <input type="text" id="stateInput" class="form-control" placeholder="State" required>
+                        <div class="address-buttons">
+                            <button id="saveAddressButton" class="btn btn-primary">Save Address</button>
+                        </div>
+                    </div>
+                </div>
+                <h3>Your Addresses</h3>
+                <div class="address-list" id="addressList">
+                    <ul class="list-group"></ul>
+                </div>
+
+                <!-- Dropdown for selecting delivery addresses -->
+                <h3>Select Delivery Address</h3>
+                <select id="addressDropdown" class="form-control" style="display:none;">
+                    <option value="">-- Select an Address --</option>
+                    <!-- Options will be populated dynamically -->
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('addressButton').addEventListener('click', function() {
+            toggleAddressDropdown();
+        });
+
+        document.getElementById('locationKey').addEventListener('click', function() {
+            toggleAddressDropdown();
+        });
+
+        document.getElementById('moreOptionsButton').addEventListener('click', function() {
+            const menu = document.getElementById('moreOptionsMenu');
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+        });
+
+        function updateDeliveryLocation() {
+            const savedAddress = localStorage.getItem('selectedAddress');
+            if (savedAddress) {
+                const address = JSON.parse(savedAddress);
+                document.getElementById('deliveryLocation').innerText = ${address.place}, ${address.district}, ${address.state};
+            } else {
+                document.getElementById('deliveryLocation').innerText = 'Select a delivery address';
+            }
+        }
+
+        function toggleAddressDropdown() {
+            const dropdown = document.getElementById('addressDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            populateAddressDropdown();
+        }
+
+        function populateAddressDropdown() {
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            const dropdown = document.getElementById('addressDropdown');
+            dropdown.innerHTML = '<option value="">-- Select an Address --</option>';
+            addresses.forEach((address, index) => {
+                dropdown.innerHTML += <option value="${index}">${address.place}, ${address.district}, ${address.state}</option>;
+            });
+        }
+
+        document.getElementById('addressDropdown').addEventListener('change', function() {
+            const selectedIndex = this.value;
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            if (selectedIndex) {
+                localStorage.setItem('selectedAddress', JSON.stringify(addresses[selectedIndex]));
+                updateDeliveryLocation();
+            }
+        });
+
+        document.getElementById('saveAddressButton').addEventListener('click', function() {
+            const place = document.getElementById('placeInput').value;
+            const district = document.getElementById('districtInput').value;
+            const state = document.getElementById('stateInput').value;
+
+            if (place && district && state) {
+                const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+                addresses.push({ place, district, state });
+                localStorage.setItem('addresses', JSON.stringify(addresses));
+                populateAddressDropdown();
+                document.getElementById('placeInput').value = '';
+                document.getElementById('districtInput').value = '';
+                document.getElementById('stateInput').value = '';
+                alert('Address saved successfully!');
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+
+        updateDeliveryLocation();
+    </script>
+</body>
+</html>  

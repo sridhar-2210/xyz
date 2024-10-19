@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .profile-container {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .profile-container h1 {
+            margin-top: 0;
+        }
+
+        .profile-container p {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h1 id="profile-name">John Doe's Profile</h1> <!-- The profile name will be dynamically updated -->
+        <p id="welcome-message">Welcome to your profile page, John Doe!</p>
+        <p>You don't have any orders yet.</p>
+    </div>
+
+    <script>
+        // Retrieve the username from localStorage and update the profile page
+        window.onload = function() {
+            const username = localStorage.getItem('username');
+            
+            // If a username is found in localStorage, update the profile details
+            if (username) {
+                document.getElementById('profile-name').textContent = ${username}'s Profile;
+                document.getElementById('welcome-message').textContent = Hello ${username}, you don't have any orders yet.;
+            }
+        };
+    </script>
+</body>
+</html>
